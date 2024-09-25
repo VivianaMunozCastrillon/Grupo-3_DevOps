@@ -14,10 +14,10 @@ app.use(express.json()) //Traducción de peticiones JSON para entendimiento del 
 //Configuración del puerto
 app.set('port', process.env.portbackend || 3000); //Opción con variable de entorno, sino por defecto puerto 3000
 
+
 //Rutas
-// app.use('/login', require('./routes/authentication'));
-// app.use('/news', require('./routes/news'));
-// app.use('/category', require('./routes/category'));
+app.use('/QuienesSomos',require('./Routes/QuienesSomos'));
+app.use('/Postularse',require('./Routes/Postularse'));
 
 //inicializacion del servidor, función en la cual se ejecuta un callback cuando se termine de levantar el servidor. 
 //Primer parámetro
@@ -26,4 +26,5 @@ app.set('port', process.env.portbackend || 3000); //Opción con variable de ento
 app.listen(process.env.portbackend || 3000, () => {
     console.log('servidor en el puerto', app.get('port'));
 });
+
 
