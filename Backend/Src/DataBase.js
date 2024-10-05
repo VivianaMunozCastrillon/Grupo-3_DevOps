@@ -1,4 +1,4 @@
-var typeorm = require("typeorm");
+const typeorm = require("typeorm");
 const Candidate = require('./Entities/Candidate');
 const  City2 = require('./Entities/City');
 const  Profession = require('./Entities/Profession');
@@ -11,7 +11,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 //Instancia de DataSource de typeorm con la configuración  para conectarse a una base de datos MySQL.
-var dataSource = new typeorm.DataSource({
+const dataSource = new typeorm.DataSource({
     type: "mysql",
     host: process.env.host,
     port: process.env.portdb,
