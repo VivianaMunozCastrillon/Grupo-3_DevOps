@@ -37,7 +37,7 @@ const Candidate = new EntitySchema({
         type: "varchar" 
       },
     Resume: {
-      type: "varchar" // Cambiado a 'text' para almacenar imágenes
+      type: "varchar" 
     },
     
   }

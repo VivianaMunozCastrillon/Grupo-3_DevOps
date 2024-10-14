@@ -10,30 +10,24 @@ const RegisterCandidate = async (req, res) => {
         const imageFile = req.file;
 
         // Validar que todos los campos estén presentes
-        if (!CandidatesId || !Name || !Email || !Phone || !ProfessionId || !ExperienceYears || !EducationLevel || !ApplicationDate || !City || !Skill) {
+        if (!CandidatesId || !Name || !Email || !Phone || !ProfessionId || !ExperienceYears || !EducationLevel || !ApplicationDate || !City|| !Skill) {
             return res.status(400).json({ error: 'El contenido no está completo' });
         }
 
         let Resume = null;
 
         // Si se sube un archivo, se procesa y se sube a Cloudinary
-        if (imageFile) {
-            const result = await new Promise((resolve, reject) => {
-                cloudinary.uploader.upload_stream((err, result) => {
-                    if (err) {
-                        console.error(err);
-                        reject(err);
-                    } else {
-                        resolve(result);
-                    }
-                }).end(imageFile.buffer);
-            });
-            Resume = result.secure_url;
+        if (Resume) {
+            try {
+                const result = await cloudinary.uploader.upload(imageFile.path); // Usa el método async
+                Resume = result.secure_url;
+            } catch (err) {
+                console.error('Error al subir el archivo a Cloudinary:', err);
+                return res.status(500).json({ error: 'Error al subir el archivo' });
+            }
         }
 
-        
-
-        // Crear los datos del candidato
+        // Crear los datos del candidato con referencias a CityId y SkillId
         const candidateData = {
             CandidatesId,
             Name,
@@ -43,13 +37,13 @@ const RegisterCandidate = async (req, res) => {
             ExperienceYears,
             EducationLevel,
             ApplicationDate,
-            City,
-            Skill,
+            City, 
+            Skill, 
             Resume
         };
 
         const candidateRepo = dataSource.getRepository(Candidate);
-        await candidateRepo.insert(candidateData);
+        const result = await candidateRepo.insert(candidateData);
 
         res.status(200).json({ success: true, msg: 'Candidato agregado' });
     } catch (error) {
@@ -57,5 +51,6 @@ const RegisterCandidate = async (req, res) => {
         res.status(500).json({ error: 'Error al ingresar el candidato' });
     }
 };
+
 
 module.exports = RegisterCandidate;
