@@ -42,7 +42,9 @@ const RegisterCandidate = async (req, res) => {
         };
 
         const candidateRepo = dataSource.getRepository(Candidate);
-        
+
+        await candidateRepo.insert(candidateData);
+
         res.status(200).json({ success: true, msg: 'Candidato agregado' });
     } catch (error) {
         console.error('Error al ingresar el candidato:', error);
