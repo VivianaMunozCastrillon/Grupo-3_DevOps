@@ -1,6 +1,5 @@
 const { dataSource } = require('../database');
 const Candidate = require('../Entities/Candidate');
-const CitySkill = require('../Controllers/ControllerCitySkill');
 const cloudinary = require("../Utils/Cloudinary");
 
 const RegisterCandidate = async (req, res) => {
@@ -43,14 +42,12 @@ const RegisterCandidate = async (req, res) => {
         };
 
         const candidateRepo = dataSource.getRepository(Candidate);
-        const result = await candidateRepo.insert(candidateData);
-
+        
         res.status(200).json({ success: true, msg: 'Candidato agregado' });
     } catch (error) {
         console.error('Error al ingresar el candidato:', error);
         res.status(500).json({ error: 'Error al ingresar el candidato' });
     }
 };
-
 
 module.exports = RegisterCandidate;
