@@ -16,7 +16,9 @@ const GetCitiesAndSkillsByProfession = async (req, res) => {
         }
 
         const cities = professionEntity.Cities.map(cityRelation => cityRelation.City.City);
-        const skills = professionEntity.Skills.map(skill => skill.Skill.Name);
+        const skills = professionEntity.Skills.map(skill => { 
+            return { skillId: skill.Skill.SkillId, skillName: skill.Skill.Name}
+        });
 
         res.status(200).json({ cities, skills });
     } catch (error) {
