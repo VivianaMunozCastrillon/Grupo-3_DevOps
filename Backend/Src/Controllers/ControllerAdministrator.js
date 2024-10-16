@@ -3,15 +3,24 @@ const Candidate = require('../Entities/Candidate');
 const cloudinary = require("../Utils/Cloudinary");
 
 const GetCandidates = async (req, res) => {
-    try {
+  try {
       const CandidateRepository = dataSource.getRepository(Candidate);
       const Candidates = await CandidateRepository.find();
-      res.status(200).json(Candidates);
-    } catch (error) {
+
+      // Transformar el resultado para incluir solo los nombres de las habilidades sin el id
+      const transformedCandidates = Candidates.map(candidate => {
+          return {
+              ...candidate,
+              Skill: candidate.Skill.map(skill => ({ name: skill.name })) // Solo devuelve el nombre sin id
+          };
+      });
+
+      res.status(200).json(transformedCandidates);
+  } catch (error) {
       console.error('Error al recuperar todos los candidatos:', error);
       res.status(500).json({ error: 'Error al recuperar todos los candidatos' });
-    }
-  };
+  }
+};
 
   const DeleteCandidates = async (req, res) => {
     try {

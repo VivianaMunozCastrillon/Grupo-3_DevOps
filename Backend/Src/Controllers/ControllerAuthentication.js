@@ -18,7 +18,6 @@ async function hashPassword(password) {
   }
 
 
- 
 const Login = async (req, res) => {
     try {
         const { AdminId, PasswordAdmin } = req.body;
