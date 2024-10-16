@@ -12,6 +12,10 @@ const RegisterCandidate = async (req, res) => {
         if (!CandidatesId || !Name || !Email || !Phone || !ProfessionId || !ExperienceYears || !EducationLevel || !ApplicationDate || !City|| !Skill) {
             return res.status(400).json({ error: 'El contenido no está completo' });
         }
+        // Validar que Skill sea un array
+        if (!Array.isArray(Skill) || Skill.length === 0) {
+            return res.status(400).json({ error: 'Debe proporcionar al menos una habilidad' });
+        }
 
         let Resume = null;
 

@@ -34,7 +34,7 @@ const Candidate = new EntitySchema({
         type: "varchar" 
       },
       Skill: {
-        type: "varchar" 
+        type: "json" 
       },
     Resume: {
       type: "varchar" 
