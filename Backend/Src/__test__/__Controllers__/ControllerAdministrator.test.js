@@ -1,3 +1,4 @@
+
 const { GetCandidates, DeleteCandidates } = require('../../Controllers/ControllerAdministrator');
 const { dataSource } = require('../../database');
 const Candidate = require('../../Entities/Candidate');
