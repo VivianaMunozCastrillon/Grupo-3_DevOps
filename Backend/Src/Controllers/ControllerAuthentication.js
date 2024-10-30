@@ -12,6 +12,7 @@ async function hashPassword(password) {
       const hashedPassword = await bcrypt.hash(password, salt);
       return hashedPassword;
     } catch (err) {
+
       throw new Error('Error al encriptar la contraseña');
     }
   }
@@ -42,6 +43,7 @@ const Login = async (req, res) => {
         res.json({ message: 'Login exitoso' });
 
     } catch (error) {
+
         res.status(500).json({ error: 'Error al realizar el login' });
     }
 };

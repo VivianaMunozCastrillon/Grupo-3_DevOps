@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node Backend/src/server.js",
 
+
     "dev": "nodemon Backend/src/server.js",
     "test": "jest"
 
@@ -26,7 +27,6 @@
     "node": "^20.18.0",
     "nodemon": "^3.1.7",
     "typeorm": "^0.3.20"
-
   },
   "devDependencies": {
     "@babel/preset-env": "^7.26.0",

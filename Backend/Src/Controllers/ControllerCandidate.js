@@ -1,11 +1,11 @@
 
-const { response } = require('express');
 const { dataSource } = require('../database');
 const Candidate = require('../Entities/Candidate');
 const cloudinary = require("../Utils/Cloudinary");
 
 const RegisterCandidate = async (req, res) => {
     try {
+
         // Parsear los datos del cuerpo de la solicitud
         const data = JSON.parse(req.body.data);
         const { 
@@ -30,12 +30,14 @@ const RegisterCandidate = async (req, res) => {
         }
 
 
+
         // Validar que Skill sea un array
         if (!Array.isArray(Skill) || Skill.length === 0) {
             return res.status(400).json({ error: 'Debe proporcionar al menos una habilidad' });
         }
 
         let Resume = null;
+
         // Subir el archivo (PDF o DOCX) a Cloudinary, si existe
         if (file) {
             try {
@@ -48,8 +50,6 @@ const RegisterCandidate = async (req, res) => {
         }
 
         // Crear los datos del candidato con la URL del CV
-
-
         const candidateData = {
             CandidatesId,
             Name,
@@ -59,7 +59,6 @@ const RegisterCandidate = async (req, res) => {
             ExperienceYears,
             EducationLevel,
             ApplicationDate,
-
             City,
             Skill,
             Resume,
@@ -73,8 +72,6 @@ const RegisterCandidate = async (req, res) => {
         res.status(200).json({ success: true, msg: 'Candidato agregado' });
     } catch (error) {
         
-
-
         res.status(500).json({ error: 'Error al ingresar el candidato' });
     }
 };

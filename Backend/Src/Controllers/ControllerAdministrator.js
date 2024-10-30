@@ -18,7 +18,9 @@ const GetCandidates = async (req, res) => {
       res.status(200).json(transformedCandidates);
   } catch (error) {
 
+
            res.status(500).json({ error: 'Error al recuperar todos los candidatos' });
+
 
   }
 };
@@ -60,6 +62,7 @@ const GetCandidates = async (req, res) => {
   
       res.json({ msg: "Candidato eliminado correctamente" });
     } catch (error) {
+
       res.status(500).json({ error: 'Error al eliminar el candidato' });
     }
   };
