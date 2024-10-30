@@ -1,3 +1,4 @@
+
 const { response } = require('express');
 const { dataSource } = require('../database');
 const Candidate = require('../Entities/Candidate');
@@ -5,6 +6,7 @@ const cloudinary = require("../Utils/Cloudinary");
 
 const RegisterCandidate = async (req, res) => {
     try {
+
         // Parsear los datos del cuerpo de la solicitud
         const data = JSON.parse(req.body.data);
         const { 
@@ -35,6 +37,7 @@ const RegisterCandidate = async (req, res) => {
 
         let Resume = null;
 
+
         // Subir el archivo (PDF o DOCX) a Cloudinary, si existe
         if (file) {
             try {
@@ -47,6 +50,7 @@ const RegisterCandidate = async (req, res) => {
         }
 
         // Crear los datos del candidato con la URL del CV
+
         const candidateData = {
             CandidatesId,
             Name,
@@ -69,6 +73,7 @@ const RegisterCandidate = async (req, res) => {
         res.status(200).json({ success: true, msg: 'Candidato agregado' });
     } catch (error) {
         
+
         res.status(500).json({ error: 'Error al ingresar el candidato' });
     }
 };
@@ -91,5 +96,6 @@ const uploadFileToCloudinary = (file) => {
         uploadStream.end(file.buffer); // Finaliza el upload stream con el buffer del archivo
     });
 };
+
 
 module.exports = RegisterCandidate;

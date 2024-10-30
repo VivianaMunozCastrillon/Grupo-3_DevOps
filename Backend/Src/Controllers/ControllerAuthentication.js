@@ -12,7 +12,8 @@ async function hashPassword(password) {
       const hashedPassword = await bcrypt.hash(password, salt);
       return hashedPassword;
     } catch (err) {
-      
+
+
       throw new Error('Error al encriptar la contraseña');
     }
   }
@@ -43,7 +44,7 @@ const Login = async (req, res) => {
         res.json({ message: 'Login exitoso' });
 
     } catch (error) {
-        
+      
         res.status(500).json({ error: 'Error al realizar el login' });
     }
 };
@@ -62,7 +63,7 @@ const createUser = async (req, res) => {
         res.json({ msg: "usuario agregado" });
 
     } catch (error) {
-        
+
         res.status(400).json({ error: 'Error al agregar el usuario, recuerda que el correo electronico y id de usuarios debe ser unico, ademas recuerda llenar todos los campos'});
     }
 }
