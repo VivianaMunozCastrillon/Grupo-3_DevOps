@@ -71,7 +71,7 @@ describe('POST /register-candidate', () => {
         });
         dataSource.getRepository(Candidate).insert.mockResolvedValueOnce({}); // Simulamos que la inserción en la DB es exitosa
 
-        const response = await request(app)
+        await request(app)
             .post('/register-candidate')
             .field('data', JSON.stringify({
                 CandidatesId: "123",
