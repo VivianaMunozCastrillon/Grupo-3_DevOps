@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/VivianaMunozCastrillon/Grupo-3_DevOps/compare/v1.0.0...v1.0.1) (2024-11-06)
+
+
+### Bug Fixes
+
+* Eliminaciondecarpetauploads ([#41](https://github.com/VivianaMunozCastrillon/Grupo-3_DevOps/issues/41)) ([1a56225](https://github.com/VivianaMunozCastrillon/Grupo-3_DevOps/commit/1a56225e2a5eeccbf874285493e70a835810c145))
+
 ## 1.0.0 (2024-10-23)
 
 
