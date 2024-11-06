@@ -25,7 +25,9 @@ const RegisterCandidate = async (req, res) => {
         const file = req.file; 
 
 
+
         // Validación de los campos
+
         if (!CandidatesId || !Name || !Email || !Phone || !ProfessionId || !ExperienceYears || !EducationLevel || !ApplicationDate || !City || !Skill) {
             return res.status(400).json({ error: 'El contenido no está completo' });
         }
@@ -35,7 +37,6 @@ const RegisterCandidate = async (req, res) => {
         }
 
         let Resume = null;
-
 
         // Subida de la imagen a Cloudinary
         if (imageFile) {
@@ -49,6 +50,7 @@ const RegisterCandidate = async (req, res) => {
         }
 
         // Crear datos del candidato
+
         const candidateData = {
             CandidatesId,
             Name,
