@@ -8,23 +8,8 @@ const RegisterCandidate = async (req, res) => {
 
         // Parsear los datos del cuerpo de la solicitud
         const data = JSON.parse(req.body.data);
-        const { 
-            CandidatesId, 
-            Name, 
-            Email, 
-            Phone, 
-            ProfessionId, 
-            ExperienceYears, 
-            EducationLevel, 
-            ApplicationDate, 
-            City, 
-            Skill 
-        } = data;
-
-        // Obtener el archivo subido
-        const file = req.file; 
-
-
+        const { CandidatesId, Name, Email, Phone, ProfessionId, ExperienceYears, EducationLevel, ApplicationDate, City, Skill } = data;
+        const imageFile = req.Resume;
 
         // Validación de los campos
 
@@ -50,7 +35,6 @@ const RegisterCandidate = async (req, res) => {
         }
 
         // Crear datos del candidato
-
         const candidateData = {
             CandidatesId,
             Name,
