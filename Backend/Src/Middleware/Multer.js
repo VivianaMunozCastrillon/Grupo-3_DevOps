@@ -1,8 +1,15 @@
-// Importa el módulo 'multer', que es un middleware para manejar la carga de archivos en el servidor
 const multer = require('multer');
+const path = require('path');
 
-// Configura 'multer' para utilizar la memoria del servidor para almacenar los archivos temporalmente durante la carga
-const upload = multer({ storage: multer.memoryStorage() });
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/'); // Define una carpeta de destino para las subidas
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname)); // Define el nombre del archivo
+    }
+});
 
-// Exporta el objeto de configuración 'upload' para que pueda ser utilizado en otros archivos del proyecto
+const upload = multer({ storage });
+
 module.exports = upload;

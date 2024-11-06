@@ -24,32 +24,33 @@ const RegisterCandidate = async (req, res) => {
         // Obtener el archivo subido
         const file = req.file; 
 
-        // Validar que todos los campos requeridos estén presentes
+
+
+        // Validación de los campos
+
         if (!CandidatesId || !Name || !Email || !Phone || !ProfessionId || !ExperienceYears || !EducationLevel || !ApplicationDate || !City || !Skill) {
             return res.status(400).json({ error: 'El contenido no está completo' });
         }
 
-
-
-        // Validar que Skill sea un array
         if (!Array.isArray(Skill) || Skill.length === 0) {
             return res.status(400).json({ error: 'Debe proporcionar al menos una habilidad' });
         }
 
         let Resume = null;
 
-        // Subir el archivo (PDF o DOCX) a Cloudinary, si existe
-        if (file) {
+        // Subida de la imagen a Cloudinary
+        if (imageFile) {
             try {
-                const uploadResult = await uploadFileToCloudinary(file);
-                Resume = uploadResult.secure_url; // Guardar la URL del archivo subido
-            } catch (err) {
-                console.error('Error al subir el archivo a Cloudinary:', err);
-                return res.status(500).json({ error: 'Error al ingresar el candidato' });
+                const result = await cloudinary.uploader.upload(req.file.path);
+                Resume = result.secure_url;
+            } catch (error) {
+                console.error("Error al subir la imagen a Cloudinary:", error);
+                return res.status(500).json({ error: "Error al subir la imagen" });
             }
         }
 
-        // Crear los datos del candidato con la URL del CV
+        // Crear datos del candidato
+
         const candidateData = {
             CandidatesId,
             Name,
@@ -97,3 +98,4 @@ const uploadFileToCloudinary = (file) => {
 };
 
 module.exports = RegisterCandidate;
+
