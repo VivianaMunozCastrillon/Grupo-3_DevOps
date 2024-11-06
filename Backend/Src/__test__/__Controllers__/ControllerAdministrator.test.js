@@ -1,110 +1,120 @@
-const request = require('supertest'); // Para realizar solicitudes HTTP en pruebas
-const express = require('express'); // Para crear la aplicación de Express
-const { dataSource } = require('../../database'); // Conexión a la base de datos
-const { GetCandidates, DeleteCandidates } = require('../../Controllers/ControllerAdministrator'); // Controladores para las operaciones de candidatos
-const cloudinary = require("../../Utils/Cloudinary"); // Utilidad para gestionar imágenes en Cloudinary
+const { GetCandidates, DeleteCandidates } = require('../../Controllers/ControllerAdministrator');
+const { dataSource } = require('../../database');
+const Candidate = require('../../Entities/Candidate');
+const cloudinary = require('../../Utils/Cloudinary');
 
-const app = express();
-app.use(express.json()); // Middleware para manejar solicitudes JSON
+jest.mock('../../database');
+jest.mock('../../Utils/Cloudinary');
 
-// Mocks de dependencias
-jest.mock('../../database', () => ({
-    dataSource: {
-        getRepository: jest.fn(), // Mock para el repositorio de la base de datos
-    },
-}));
+describe('Admin Controller Tests', () => {
+  
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
-jest.mock("../../Utils/Cloudinary", () => ({
-    uploader: {
-        destroy: jest.fn(), // Mock de la función de eliminación en Cloudinary
-    },
-}));
+  describe('GetCandidates', () => {
+    it('should return a list of candidates with transformed skills', async () => {
+      const mockCandidates = [
+        { id: 1, name: 'John Doe', Skill: [{ name: 'JavaScript' }, { name: 'Node.js' }] },
+        { id: 2, name: 'Jane Doe', Skill: [{ name: 'Python' }] }
+      ];
 
-describe('Candidate API', () => {
-    afterEach(() => {
-        jest.clearAllMocks(); // Limpiar mocks después de cada prueba
+      dataSource.getRepository = jest.fn().mockReturnValue({
+        find: jest.fn().mockResolvedValue(mockCandidates),
+      });
+
+      const req = {};
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      };
+
+      await GetCandidates(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith([
+        { id: 1, name: 'John Doe', Skill: [{ name: 'JavaScript' }, { name: 'Node.js' }] },
+        { id: 2, name: 'Jane Doe', Skill: [{ name: 'Python' }] }
+      ]);
     });
 
-    // Pruebas para la ruta GET /candidates
-    describe('GET /candidates', () => {
-        it('should return a list of candidates with skills', async () => {
-            const mockCandidates = [ /* Datos simulados de candidatos */ ];
-            dataSource.getRepository.mockReturnValue({
-                find: jest.fn().mockResolvedValue(mockCandidates), // Simular la respuesta de búsqueda de candidatos
-            });
+    it('should handle errors when retrieving candidates', async () => {
+      dataSource.getRepository = jest.fn().mockReturnValue({
+        find: jest.fn().mockRejectedValue(new Error('Database error')),
+      });
 
-            const response = await request(app).get('/candidates'); // Realiza una solicitud GET
+      const req = {};
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      };
 
-            expect(response.status).toBe(200); // Verifica que el estado de la respuesta sea 200
-            expect(response.body).toEqual(mockCandidates); // Verifica que el cuerpo de la respuesta sea igual a los candidatos simulados
-        });
+      await GetCandidates(req, res);
 
-        it('should return a 500 error if there is a database error', async () => {
-            dataSource.getRepository.mockReturnValue({
-                find: jest.fn().mockRejectedValue(new Error('Database error')), // Simular un error en la base de datos
-            });
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ error: 'Error al recuperar todos los candidatos' });
+    });
+  });
 
-            const response = await request(app).get('/candidates'); // Realiza una solicitud GET
+  describe('DeleteCandidates', () => {
+    it('should delete a candidate and its associated image in Cloudinary', async () => {
+      const mockCandidate = {
+        CandidatesId: '123',
+        Resume: 'http://res.cloudinary.com/demo/image/upload/sample.jpg',
+      };
 
-            expect(response.status).toBe(500); // Verifica que el estado de la respuesta sea 500
-            expect(response.body).toEqual({ error: 'Error al recuperar todos los candidatos' }); // Verifica el mensaje de error
-        });
+      dataSource.getRepository = jest.fn().mockReturnValue({
+        findOne: jest.fn().mockResolvedValue(mockCandidate),
+        delete: jest.fn().mockResolvedValue({})
+      });
+
+      cloudinary.uploader.destroy = jest.fn((public_id, callback) => callback(null, { result: 'ok' }));
+
+      const req = { params: { CandidatesId: '123' } };
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      };
+
+      await DeleteCandidates(req, res);
+
+      expect(cloudinary.uploader.destroy).toHaveBeenCalledWith('sample', expect.any(Function));
+      expect(res.json).toHaveBeenCalledWith({ msg: 'Candidato eliminado correctamente' });
     });
 
-    // Pruebas para la ruta DELETE /candidates/:CandidatesId
-    describe('DELETE /candidates/:CandidatesId', () => {
-        it('should delete a candidate and its resume from Cloudinary', async () => {
-            const mockCandidate = { /* Datos simulados del candidato */ };
-            dataSource.getRepository.mockReturnValue({
-                findOne: jest.fn().mockResolvedValue(mockCandidate), // Simular búsqueda del candidato
-                delete: jest.fn().mockResolvedValue({}), // Simular eliminación exitosa
-            });
+    it('should return 404 if candidate is not found', async () => {
+      dataSource.getRepository = jest.fn().mockReturnValue({
+        findOne: jest.fn().mockResolvedValue(null),
+      });
 
-            cloudinary.uploader.destroy.mockImplementation((public_id, callback) => {
-                callback(null, {}); // Simular respuesta de eliminación en Cloudinary
-            });
+      const req = { params: { CandidatesId: '123' } };
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      };
 
-            const response = await request(app).delete('/candidates/1'); // Realiza una solicitud DELETE
+      await DeleteCandidates(req, res);
 
-            expect(response.status).toBe(200); // Verifica que el estado de la respuesta sea 200
-            expect(response.body).toEqual({ msg: "Candidato eliminado correctamente" }); // Verifica el mensaje de éxito
-        });
-
-        it('should return a 400 error if no CandidatesId is provided', async () => {
-            const response = await request(app).delete('/candidates/'); // Realiza una solicitud DELETE sin ID
-
-            expect(response.status).toBe(400); // Verifica que el estado de la respuesta sea 400
-            expect(response.body).toEqual({ error: 'ID del candidato no proporcionado' }); // Verifica el mensaje de error
-        });
-
-        it('should return a 404 error if the candidate is not found', async () => {
-            dataSource.getRepository.mockReturnValue({
-                findOne: jest.fn().mockResolvedValue(null), // Simular que no se encuentra el candidato
-            });
-
-            const response = await request(app).delete('/candidates/1'); // Realiza una solicitud DELETE
-
-            expect(response.status).toBe(404); // Verifica que el estado de la respuesta sea 404
-            expect(response.body).toEqual({ error: 'Candidato no encontrado' }); // Verifica el mensaje de error
-        });
-
-        it('should return a 500 error if there is a server error during deletion', async () => {
-            dataSource.getRepository.mockReturnValue({
-                findOne: jest.fn().mockResolvedValue(mockCandidate), // Simular búsqueda exitosa
-                delete: jest.fn().mockRejectedValue(new Error('Delete error')), // Simular error en la eliminación
-            });
-
-            const response = await request(app).delete('/candidates/1'); // Realiza una solicitud DELETE
-
-            expect(response.status).toBe(500); // Verifica que el estado de la respuesta sea 500
-            expect(response.body).toEqual({ error: 'Error al eliminar el candidato' }); // Verifica el mensaje de error
-        });
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({ error: 'Candidato no encontrado' });
     });
+
+    it('should handle errors when deleting a candidate', async () => {
+      dataSource.getRepository = jest.fn().mockReturnValue({
+        findOne: jest.fn().mockRejectedValue(new Error('Database error')),
+      });
+
+      const req = { params: { CandidatesId: '123' } };
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      };
+
+      await DeleteCandidates(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ error: 'Error al eliminar el candidato' });
+    });
+  });
 });
 
-
-
-// Nota: Veo algunos endpoint que devuelven respuestas quizas equivocadas, ajustar los test
-// basados en las necesidades y los codigos de su preferencia 404, 400 etc... 
-// esto es una sugerencia ya que es importante en ambientes controlados guiarse con respecto al # de codigo
-// que se devuelve para ver que error hay y como solucionarlo
