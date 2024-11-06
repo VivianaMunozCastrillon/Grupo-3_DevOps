@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const upload = require('../middleware/multer');
+const upload = require('../Middleware/Multer');
 const { GetCandidates, DeleteCandidates } = require('../Controllers/ControllerAdministrator');
 const GetProfessions = require('../Controllers/ControllerProfession'); // Asegúrate de que este nombre coincida
 const RegisterCandidate = require('../Controllers/ControllerCandidate');
