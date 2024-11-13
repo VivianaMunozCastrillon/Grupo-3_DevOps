@@ -7,7 +7,9 @@ const RegisterCandidate = async (req, res) => {
     try {
         const data = JSON.parse(req.body.data);
         const { CandidatesId, Name, Email, Phone, ProfessionId, ExperienceYears, EducationLevel, ApplicationDate, City, Skill } = data;
+
         const imageFile = req.file; // Acceso al archivo de imagen subido
+
 
         if (!CandidatesId || !Name || !Email || !Phone || !ProfessionId || !EducationLevel || !ApplicationDate || !City || !Skill) {
             return res.status(400).json({ error: 'El contenido no está completo' });
@@ -33,6 +35,7 @@ const RegisterCandidate = async (req, res) => {
                 return res.status(500).json({ error: "Error al subir la imagen" });
             }
         }
+
 
         const candidateData = {
             CandidatesId,
