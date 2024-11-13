@@ -8,7 +8,9 @@ const RegisterCandidate = async (req, res) => {
     try {
         const data = JSON.parse(req.body.data);
         const { CandidatesId, Name, Email, Phone, ProfessionId, ExperienceYears, EducationLevel, ApplicationDate, City, Skill } = data;
+
         const imageFile = req.file;
+
 
         if (!CandidatesId || !Name || !Email || !Phone || !ProfessionId || !EducationLevel || !ApplicationDate || !City || !Skill) {
             return res.status(400).json({ error: 'El contenido no está completo' });
@@ -22,6 +24,7 @@ const RegisterCandidate = async (req, res) => {
 
         if (imageFile) {
             try {
+
                 // Envolver la subida en una promesa
                 const result = await new Promise((resolve, reject) => {
                     const uploadStream = cloudinary.uploader.upload_stream((error, result) => {
@@ -34,12 +37,13 @@ const RegisterCandidate = async (req, res) => {
                     uploadStream.end(imageFile.buffer); // Usa el buffer del archivo
                 });
                 Resume = result.secure_url;
+
             } catch (error) {
                 console.error("Error al subir la imagen a Cloudinary:", error);
                 return res.status(500).json({ error: "Error al subir la imagen" });
             }
         }
-        
+
         const candidateData = {
             CandidatesId,
             Name,
@@ -59,7 +63,7 @@ const RegisterCandidate = async (req, res) => {
 
         res.status(200).json({ success: true, msg: 'Candidato agregado' });
     } catch (error) {
-        console.error("Error al procesar la solicitud:", error);
+
         res.status(500).json({ error: 'Error al ingresar el candidato' });
     }
 };
