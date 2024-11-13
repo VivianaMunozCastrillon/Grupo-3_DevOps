@@ -11,7 +11,6 @@ const RegisterCandidate = async (req, res) => {
 
         const imageFile = req.file;
 
-
         if (!CandidatesId || !Name || !Email || !Phone || !ProfessionId || !EducationLevel || !ApplicationDate || !City || !Skill) {
             return res.status(400).json({ error: 'El contenido no está completo' });
         }
@@ -38,11 +37,13 @@ const RegisterCandidate = async (req, res) => {
                 });
                 Resume = result.secure_url;
 
+
             } catch (error) {
                 console.error("Error al subir la imagen a Cloudinary:", error);
                 return res.status(500).json({ error: "Error al subir la imagen" });
             }
         }
+
 
         const candidateData = {
             CandidatesId,
