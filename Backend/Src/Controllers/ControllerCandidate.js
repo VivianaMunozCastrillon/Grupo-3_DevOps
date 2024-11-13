@@ -1,16 +1,14 @@
 
 const { dataSource } = require('../DataBase');
 const Candidate = require('../Entities/Candidate');
+const Profession = require('../Entities/Profession');
 const cloudinary = require("../Utils/Cloudinary");
 
 const RegisterCandidate = async (req, res) => {
     try {
         const data = JSON.parse(req.body.data);
         const { CandidatesId, Name, Email, Phone, ProfessionId, ExperienceYears, EducationLevel, ApplicationDate, City, Skill } = data;
-
-        const imageFile = req.file; // Acceso al archivo de imagen subido
-
-
+        const imageFile = req.file;
 
         if (!CandidatesId || !Name || !Email || !Phone || !ProfessionId || !EducationLevel || !ApplicationDate || !City || !Skill) {
             return res.status(400).json({ error: 'El contenido no está completo' });
@@ -24,20 +22,24 @@ const RegisterCandidate = async (req, res) => {
 
         if (imageFile) {
             try {
-                const result = await cloudinary.uploader.upload_stream((error, result) => {
-                    if (error) {
-                        console.error("Error al subir la imagen a Cloudinary:", error);
-                        return res.status(500).json({ error: "Error al subir la imagen" });
-                    }
-                    Resume = result.secure_url;
-                }).end(imageFile.buffer); // Usa el buffer del archivo
+                // Envolver la subida en una promesa
+                const result = await new Promise((resolve, reject) => {
+                    const uploadStream = cloudinary.uploader.upload_stream((error, result) => {
+                        if (error) {
+                            reject(error);
+                        } else {
+                            resolve(result);
+                        }
+                    });
+                    uploadStream.end(imageFile.buffer); // Usa el buffer del archivo
+                });
+                Resume = result.secure_url;
             } catch (error) {
                 console.error("Error al subir la imagen a Cloudinary:", error);
                 return res.status(500).json({ error: "Error al subir la imagen" });
             }
         }
-
-
+        
         const candidateData = {
             CandidatesId,
             Name,
@@ -57,28 +59,9 @@ const RegisterCandidate = async (req, res) => {
 
         res.status(200).json({ success: true, msg: 'Candidato agregado' });
     } catch (error) {
+        console.error("Error al procesar la solicitud:", error);
         res.status(500).json({ error: 'Error al ingresar el candidato' });
     }
-};
-
-
-// Función auxiliar para subir el archivo a Cloudinary
-const uploadFileToCloudinary = (file) => {
-    return new Promise((resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream(
-            {
-                resource_type: 'auto' // Detecta automáticamente el tipo de archivo
-            },
-            (error, result) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(result);
-                }
-            }
-        );
-        uploadStream.end(file.buffer); // Finaliza el upload stream con el buffer del archivo
-    });
 };
 
 module.exports = RegisterCandidate;
