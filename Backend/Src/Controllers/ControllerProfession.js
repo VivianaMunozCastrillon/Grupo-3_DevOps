@@ -1,5 +1,5 @@
 // ControllerProfession.js
-const { dataSource } = require('../database');
+const { dataSource } = require('../DataBase');
 const Profession = require('../Entities/Profession');
 
 const GetProfessions = async (req, res) => {

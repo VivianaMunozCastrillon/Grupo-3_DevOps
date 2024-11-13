@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 
-const { connection } = require('./database');
+const { connection } = require('./DataBase');
 
 
 const app = express(); //Creo un objeto para usar las funcionalidades de Express
