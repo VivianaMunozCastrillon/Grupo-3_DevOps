@@ -1,4 +1,4 @@
-const { connection, dataSource} = require('../database');
+const { connection, dataSource} = require('../DataBase');
 const dotenv = require('dotenv');
 const Admin = require('../Entities/Admin');
 const bcrypt = require('bcrypt');

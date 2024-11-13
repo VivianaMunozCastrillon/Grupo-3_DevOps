@@ -1,4 +1,4 @@
-const { dataSource } = require('../database');
+const { dataSource } = require('../DataBase');
 const Profession = require('../Entities/Profession');
 
 const GetCitiesAndSkillsByProfession = async (req, res) => {

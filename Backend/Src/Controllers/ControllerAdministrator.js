@@ -1,4 +1,4 @@
-const { dataSource } = require('../database');
+const { dataSource } = require('../DataBase');
 const Candidate = require('../Entities/Candidate');
 const cloudinary = require("../Utils/Cloudinary");
 

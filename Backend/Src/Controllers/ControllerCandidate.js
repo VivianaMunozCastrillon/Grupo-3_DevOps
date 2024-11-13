@@ -1,17 +1,16 @@
 
-const { dataSource } = require('../database');
+const { dataSource } = require('../DataBase');
 const Candidate = require('../Entities/Candidate');
 const cloudinary = require("../Utils/Cloudinary");
 
 const RegisterCandidate = async (req, res) => {
     try {
-
-        // Parsear los datos del cuerpo de la solicitud
         const data = JSON.parse(req.body.data);
         const { CandidatesId, Name, Email, Phone, ProfessionId, ExperienceYears, EducationLevel, ApplicationDate, City, Skill } = data;
-        const imageFile = req.Resume;
 
-        // Validación de los campos
+        const imageFile = req.file; // Acceso al archivo de imagen subido
+
+
 
         if (!CandidatesId || !Name || !Email || !Phone || !ProfessionId || !EducationLevel || !ApplicationDate || !City || !Skill) {
             return res.status(400).json({ error: 'El contenido no está completo' });
@@ -23,18 +22,22 @@ const RegisterCandidate = async (req, res) => {
 
         let Resume = null;
 
-        // Subida de la imagen a Cloudinary
         if (imageFile) {
             try {
-                const result = await cloudinary.uploader.upload(req.file.path);
-                Resume = result.secure_url;
+                const result = await cloudinary.uploader.upload_stream((error, result) => {
+                    if (error) {
+                        console.error("Error al subir la imagen a Cloudinary:", error);
+                        return res.status(500).json({ error: "Error al subir la imagen" });
+                    }
+                    Resume = result.secure_url;
+                }).end(imageFile.buffer); // Usa el buffer del archivo
             } catch (error) {
                 console.error("Error al subir la imagen a Cloudinary:", error);
                 return res.status(500).json({ error: "Error al subir la imagen" });
             }
         }
 
-        // Crear datos del candidato
+
         const candidateData = {
             CandidatesId,
             Name,
@@ -49,14 +52,11 @@ const RegisterCandidate = async (req, res) => {
             Resume,
         };
 
-        // Guardar el candidato en la base de datos
         const candidateRepo = dataSource.getRepository(Candidate);
         await candidateRepo.insert(candidateData);
 
-        // Responder con éxito
         res.status(200).json({ success: true, msg: 'Candidato agregado' });
     } catch (error) {
-        
         res.status(500).json({ error: 'Error al ingresar el candidato' });
     }
 };
