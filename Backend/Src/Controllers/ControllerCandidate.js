@@ -11,6 +11,7 @@ const RegisterCandidate = async (req, res) => {
         const imageFile = req.file; // Acceso al archivo de imagen subido
 
 
+
         if (!CandidatesId || !Name || !Email || !Phone || !ProfessionId || !EducationLevel || !ApplicationDate || !City || !Skill) {
             return res.status(400).json({ error: 'El contenido no está completo' });
         }
