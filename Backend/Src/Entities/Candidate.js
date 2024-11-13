@@ -1,4 +1,5 @@
 const { EntitySchema } = require("typeorm");
+const Profession = require("./Profession"); // Asegúrate de importar la entidad Profession
 
 const Candidate = new EntitySchema({
   name: "Candidate",
@@ -10,16 +11,13 @@ const Candidate = new EntitySchema({
       generated: false
     },
     Name: {
-        type: "varchar"
-      },
-      Email: {
-        type: "varchar"
-      },
-      Phone: {
       type: "varchar"
     },
-    ProfessionId: {
-      type: "int"
+    Email: {
+      type: "varchar"
+    },
+    Phone: {
+      type: "varchar"
     },
     ExperienceYears: {
       type: "int"
@@ -28,18 +26,29 @@ const Candidate = new EntitySchema({
       type: "varchar"
     },
     ApplicationDate: {
-        type: "date"
-      },
-      City: {
-        type: "varchar" 
-      },
-      Skill: {
-        type: "json" 
-      },
-    Resume: {
-      type: "varchar" 
+      type: "date"
     },
-    
+    City: {
+      type: "varchar"
+    },
+    ProfessionId: {
+      type: "int"
+    },
+    Skill: {
+      type: "json"
+    },
+    Resume: {
+      type: "varchar"
+    }
+  },
+  relations: {
+    profession: {
+      type: "many-to-one", // Relación de muchos a uno
+      target: "Profession", // Nombre de la entidad relacionada
+      joinColumn: {
+        name: "ProfessionId" // Nombre de la columna que se usará para la unión
+      }
+    }
   }
 });
 
