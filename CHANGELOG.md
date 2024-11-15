@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/VivianaMunozCastrillon/Grupo-3_DevOps/compare/v1.0.1...v1.0.2) (2024-11-15)
+
+
+### Bug Fixes
+
+* Arreglo de Cors ([#52](https://github.com/VivianaMunozCastrillon/Grupo-3_DevOps/issues/52)) ([009e409](https://github.com/VivianaMunozCastrillon/Grupo-3_DevOps/commit/009e409f83c08dd770347a95fc3f89637aff9fcf))
+
 ## [1.0.1](https://github.com/VivianaMunozCastrillon/Grupo-3_DevOps/compare/v1.0.0...v1.0.1) (2024-11-06)
 
 
