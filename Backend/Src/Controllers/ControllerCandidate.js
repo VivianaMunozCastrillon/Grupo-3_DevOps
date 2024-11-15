@@ -8,6 +8,7 @@ const RegisterCandidate = async (req, res) => {
     try {
         const data = JSON.parse(req.body.data);
         const { CandidatesId, Name, Email, Phone, ProfessionId, ExperienceYears, EducationLevel, ApplicationDate, City, Skill } = data;
+
         const imageFile = req.file;
 
         if (!CandidatesId || !Name || !Email || !Phone || !ProfessionId || !EducationLevel || !ApplicationDate || !City || !Skill) {
