@@ -14,7 +14,7 @@ connection();
 
 //middlewares
 const corsOptions = {
-    origin: 'https://front-grupo3devops.onrender.com/',  // Permitir solo este dominio
+    origin: 'https://front-grupo3devops.onrender.com',  // Permitir solo este dominio
     methods: 'GET,POST,DELETE',           // Permitir solo estos métodos
     optionsSuccessStatus: 200      // Establecer un status específico para las respuestas OPTIONS
   };
