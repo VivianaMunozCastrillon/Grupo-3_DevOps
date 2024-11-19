@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/VivianaMunozCastrillon/Grupo-3_DevOps/compare/v1.0.2...v1.0.3) (2024-11-19)
+
+
+### Bug Fixes
+
+* validacion de test ([#55](https://github.com/VivianaMunozCastrillon/Grupo-3_DevOps/issues/55)) ([5693185](https://github.com/VivianaMunozCastrillon/Grupo-3_DevOps/commit/5693185c5da84a278545f5a57cd29b61f83cffe2))
+
 ## [1.0.2](https://github.com/VivianaMunozCastrillon/Grupo-3_DevOps/compare/v1.0.1...v1.0.2) (2024-11-15)
 
 
