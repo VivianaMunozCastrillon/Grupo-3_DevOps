@@ -59,7 +59,7 @@ const RegisterCandidate = async (req, res) => {
 
         res.status(200).json({ success: true, msg: 'Candidato agregado' });
     } catch (error) {
-        console.error("Error al procesar la solicitud:", error);
+    
         res.status(500).json({ error: 'Error al ingresar el candidato' });
     }
 };
