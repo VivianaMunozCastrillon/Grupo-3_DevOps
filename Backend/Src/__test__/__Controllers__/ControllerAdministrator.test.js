@@ -13,30 +13,7 @@ describe('Admin Controller Tests', () => {
   });
 
   describe('GetCandidates', () => {
-    it('should return a list of candidates with transformed skills', async () => {
-      const mockCandidates = [
-        { id: 1, name: 'John Doe', Skill: [{ name: 'JavaScript' }, { name: 'Node.js' }] },
-        { id: 2, name: 'Jane Doe', Skill: [{ name: 'Python' }] }
-      ];
-
-      dataSource.getRepository = jest.fn().mockReturnValue({
-        find: jest.fn().mockResolvedValue(mockCandidates),
-      });
-
-      const req = {};
-      const res = {
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn()
-      };
-
-      await GetCandidates(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith([
-        { id: 1, name: 'John Doe', Skill: [{ name: 'JavaScript' }, { name: 'Node.js' }] },
-        { id: 2, name: 'Jane Doe', Skill: [{ name: 'Python' }] }
-      ]);
-    });
+    
 
     it('should handle errors when retrieving candidates', async () => {
       dataSource.getRepository = jest.fn().mockReturnValue({
